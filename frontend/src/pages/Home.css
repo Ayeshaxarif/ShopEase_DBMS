@@ -1,0 +1,138 @@
+/* Hero Section */
+.hero {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  text-align: center;
+  padding: 80px 20px;
+}
+
+.hero h1 {
+  font-size: 48px;
+  margin-bottom: 20px;
+}
+
+.hero p {
+  font-size: 20px;
+  margin-bottom: 30px;
+  opacity: 0.9;
+}
+
+.shop-btn {
+  display: inline-block;
+  background: white;
+  color: #667eea;
+  padding: 15px 40px;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+/* Categories */
+.categories-section {
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.categories-section h2 {
+  font-size: 32px;
+  margin-bottom: 40px;
+  color: #333;
+}
+
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.category-card {
+  padding: 40px 20px;
+  border-radius: 15px;
+  color: white;
+  text-decoration: none;
+  transition: transform 0.3s;
+}
+
+.category-card:hover {
+  transform: translateY(-5px);
+}
+
+.category-icon {
+  font-size: 48px;
+  display: block;
+  margin-bottom: 10px;
+}
+
+/* Featured Products */
+.featured-section {
+  padding: 60px 20px;
+  background: #f8f9fa;
+}
+
+.featured-section h2 {
+  text-align: center;
+  font-size: 32px;
+  margin-bottom: 40px;
+  color: #333;
+}
+
+.featured-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.featured-card {
+  background: white;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  padding: 20px;
+  text-align: center;
+}
+
+.featured-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 15px;
+}
+
+.featured-card h3 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.price {
+  font-size: 22px;
+  color: #667eea;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.view-btn {
+  display: inline-block;
+  padding: 10px 25px;
+  background: #667eea;
+  color: white;
+  text-decoration: none;
+  border-radius: 20px;
+}
+
+/* Footer */
+.footer {
+  background: #333;
+  color: white;
+  text-align: center;
+  padding: 30px;
+}
+
+.footer p {
+  margin: 5px 0;
+}
