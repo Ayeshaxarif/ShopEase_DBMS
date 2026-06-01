@@ -10,6 +10,23 @@ router.post('/', async (req, res) => {
       ...req.body,
       createdAt: new Date()
     });
+
+    // Update stock for each product
+    if (req.body.items && req.body.items.length > 0) {
+      for (const item of req.body.items) {
+        if (item.productId && item.productId !== 'guest') {
+          try {
+            await db.collection('products').updateOne(
+              { _id: new mongoose.Types.ObjectId(item.productId) },
+              { $inc: { stock: -item.quantity } }
+            );
+          } catch (e) {
+            console.log('Stock update skipped for:', item.productId);
+          }
+        }
+      }
+    }
+
     res.status(201).json({ success: true, order });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -20,7 +37,10 @@ router.post('/', async (req, res) => {
 router.get('/', async (req, res) => {
   try {
     const db = mongoose.connection.db;
-    const orders = await db.collection('orders').find({}).sort({ createdAt: -1 }).toArray();
+    const orders = await db.collection('orders')
+      .find({})
+      .sort({ createdAt: -1 })
+      .toArray();
     res.json({ success: true, orders });
   } catch (error) {
     res.status(500).json({ message: error.message });
