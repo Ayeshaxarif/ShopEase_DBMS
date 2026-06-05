@@ -2,16 +2,25 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Checkout.css';
 
-function Checkout({ cart }) {
+function Checkout({ cart, clearCart }) {
   const navigate = useNavigate();
+
+  // FIX (Minor): Auto-fill form with logged-in user's info
+  const savedUser = JSON.parse(localStorage.getItem('user') || '{}');
+
   const [form, setForm] = useState({
-    name: '', email: '', phone: '',
-    street: '', city: '', country: 'Pakistan',
-    paymentMethod: 'cash_on_delivery'
+    name:          savedUser.name  || '',
+    email:         savedUser.email || '',
+    phone:         '',
+    street:        '',
+    city:          '',
+    country:       'Pakistan',
+    paymentMethod: 'cash_on_delivery',
   });
+
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [error, setError] = useState('');
+  const [error,   setError]   = useState('');
 
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
@@ -22,41 +31,44 @@ function Checkout({ cart }) {
     try {
       const user = JSON.parse(localStorage.getItem('user') || '{}');
       const orderData = {
-        userId: user.id || 'guest',
-        customerName: form.name,
+        userId:        user.id || 'guest',
+        customerName:  form.name,
         customerEmail: form.email,
         customerPhone: form.phone,
         items: cart.map(item => ({
           productId: item._id || item.id,
-          name: item.name,
-          price: item.price,
-          quantity: item.quantity,
-          icon: item.icon
+          name:      item.name,
+          price:     item.price,
+          quantity:  item.quantity,
+          icon:      item.icon,
         })),
-        totalAmount: total,
+        totalAmount:     total,
         shippingAddress: {
-          street: form.street,
-          city: form.city,
-          country: form.country
+          street:  form.street,
+          city:    form.city,
+          country: form.country,
         },
         paymentMethod: form.paymentMethod,
-        status: 'pending',
-        isPaid: false,
-        createdAt: new Date()
+        status:        'pending',
+        isPaid:        false,
+        createdAt:     new Date(),
       };
 
       const res = await fetch('http://localhost:5000/api/orders', {
-        method: 'POST',
+        method:  'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(orderData)
+        body:    JSON.stringify(orderData),
       });
 
       const data = await res.json();
       if (data.success) {
+        // Save order ID for confirmation page
+        localStorage.setItem('lastOrderId', data.order?._id || '');
+        clearCart();
         setSuccess(true);
-        setTimeout(() => navigate('/home'), 3000);
+        setTimeout(() => navigate('/order-confirmation'), 2000);
       } else {
-        setError('Order place karne mein problem aayi!');
+        setError(data.message || 'Order place karne mein problem aayi!');
       }
     } catch (err) {
       setError('Server se connection nahi ho raha!');
@@ -70,13 +82,19 @@ function Checkout({ cart }) {
       <div style={{
         minHeight: 'calc(100vh - 144px)',
         background: 'linear-gradient(135deg, #0f0f1a, #1a1040)',
-        display: 'flex', alignItems: 'center', justifyContent: 'center'
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
       }}>
         <div style={{ textAlign: 'center', color: '#fff' }}>
           <div style={{ fontSize: '80px', marginBottom: '24px' }}>🎉</div>
-          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: '36px', marginBottom: '16px' }}>Order Placed!</h2>
-          <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '16px', marginBottom: '8px' }}>Aapka order successfully place ho gaya!</p>
-          <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '14px' }}>Home page par redirect ho raha hai...</p>
+          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: '36px', marginBottom: '16px' }}>
+            Order Placed!
+          </h2>
+          <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '16px', marginBottom: '8px' }}>
+            Aapka order successfully place ho gaya!
+          </p>
+          <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '14px' }}>
+            Orders page par redirect ho raha hai...
+          </p>
         </div>
       </div>
     );
@@ -88,6 +106,7 @@ function Checkout({ cart }) {
         <div className="checkout-form-section">
           <h1>Checkout</h1>
           <form onSubmit={handleSubmit}>
+
             <div className="checkout-section">
               <h3>👤 Personal Info</h3>
               <div className="form-row">
@@ -135,11 +154,12 @@ function Checkout({ cart }) {
               <div className="payment-options">
                 {[
                   { value: 'cash_on_delivery', label: '💵 Cash on Delivery' },
-                  { value: 'card', label: '💳 Credit/Debit Card' },
-                  { value: 'jazzcash', label: '📱 JazzCash' },
-                  { value: 'easypaisa', label: '📱 EasyPaisa' },
+                  { value: 'card',             label: '💳 Credit/Debit Card' },
+                  { value: 'jazzcash',         label: '📱 JazzCash' },
+                  { value: 'easypaisa',        label: '📱 EasyPaisa' },
                 ].map(opt => (
-                  <label key={opt.value} className={`payment-option ${form.paymentMethod === opt.value ? 'active' : ''}`}>
+                  <label key={opt.value}
+                    className={`payment-option ${form.paymentMethod === opt.value ? 'active' : ''}`}>
                     <input type="radio" name="payment" value={opt.value}
                       checked={form.paymentMethod === opt.value}
                       onChange={e => setForm({ ...form, paymentMethod: e.target.value })} />
@@ -185,3 +205,4 @@ function Checkout({ cart }) {
 }
 
 export default Checkout;
+

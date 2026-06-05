@@ -34,7 +34,7 @@ function Orders() {
         <div className="orders-empty">
           <div className="empty-icon">🔐</div>
           <h2>Login Required</h2>
-          <p>Apne orders dekhne ke liye login karein</p>
+          <p>Login to see your orders</p>
           <Link to="/login" className="orders-login-btn">Login →</Link>
         </div>
       </div>
@@ -45,7 +45,7 @@ function Orders() {
     <div className="orders-page">
       <div className="orders-header">
         <h1>My <span>Orders</span></h1>
-        <p>Aapke saare orders yahan hain</p>
+        <p>Your orders</p>
       </div>
 
       {loading ? (
@@ -53,8 +53,8 @@ function Orders() {
       ) : orders.length === 0 ? (
         <div className="orders-empty">
           <div className="empty-icon">📦</div>
-          <h2>Koi order nahi hai abhi</h2>
-          <p>Shopping shuru karein!</p>
+          <h2>No order has been placed</h2>
+          <p>You can Shop now</p>
           <Link to="/products" className="orders-login-btn">Shop Now →</Link>
         </div>
       ) : (

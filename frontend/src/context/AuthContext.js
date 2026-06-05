@@ -1,44 +1,48 @@
 import React, { createContext, useState, useContext } from 'react';
+import { loginUser, signupUser } from '../api';
 
 const AuthContext = createContext();
 
-const DEMO_USERS = [
-  {
-    email: 'ayesha@shopease.com',
-    password: 'admin123',
-    name: 'Ayesha',
-    role: 'admin'
-  }
-];
-
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
-    const saved = localStorage.getItem('shopease_user');
+    // Read from localStorage on startup (same key as Login.js uses)
+    const saved = localStorage.getItem('user');
     return saved ? JSON.parse(saved) : null;
   });
 
-  const login = (email, password) => {
-    const found = DEMO_USERS.find(u => u.email === email && u.password === password);
-    
-    if (found) {
-      const userData = { email: found.email, name: found.name, role: found.role };
-      localStorage.setItem('shopease_user', JSON.stringify(userData));
-      setUser(userData);
-      return { success: true, user: userData };
+  // FIX: login now calls the real backend API instead of hardcoded DEMO_USERS
+  const login = async (email, password) => {
+    const data = await loginUser(email, password);
+    if (data.success) {
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+      setUser(data.user);
     }
-    
-    return { success: false, message: 'Invalid email or password' };
+    return data;
+  };
+
+  // FIX: signup also calls the real backend API
+  const signup = async (name, email, password) => {
+    const data = await signupUser(name, email, password);
+    if (data.success) {
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+      setUser(data.user);
+    }
+    return data;
   };
 
   const logout = () => {
-    localStorage.removeItem('shopease_user');
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
     setUser(null);
   };
 
-  const isAdmin = () => user?.role === 'admin';
+  const isAdmin    = () => user?.role === 'admin';
+  const isLoggedIn = () => !!user;
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, isAdmin }}>
+    <AuthContext.Provider value={{ user, login, signup, logout, isAdmin, isLoggedIn }}>
       {children}
     </AuthContext.Provider>
   );

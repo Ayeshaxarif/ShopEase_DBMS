@@ -110,3 +110,8 @@
 .add-to-cart-btn:hover {
   background: #e94560;
 }
+.product-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
