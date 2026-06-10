@@ -35,7 +35,7 @@ function OrderConfirmation({ orderId }) {
         }}>Order Confirmed!</h1>
 
         <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '16px', marginBottom: '32px' }}>
-          Thankyou Your order has been placed successfully....s
+          Thankyou Your order has been placed successfully....
         </p>
 
         {/* Order ID Box */}

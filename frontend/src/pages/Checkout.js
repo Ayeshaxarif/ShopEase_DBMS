@@ -68,10 +68,10 @@ function Checkout({ cart, clearCart }) {
         setSuccess(true);
         setTimeout(() => navigate('/order-confirmation'), 2000);
       } else {
-        setError(data.message || 'Order place karne mein problem aayi!');
+        setError(data.message || 'Any problem in placing order!');
       }
     } catch (err) {
-      setError('Server se connection nahi ho raha!');
+      setError('Problem in Server  connection!');
     } finally {
       setLoading(false);
     }
@@ -90,10 +90,10 @@ function Checkout({ cart, clearCart }) {
             Order Placed!
           </h2>
           <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '16px', marginBottom: '8px' }}>
-            Aapka order successfully place ho gaya!
+            Your order has been placed successfully!
           </p>
           <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '14px' }}>
-            Orders page par redirect ho raha hai...
+             redirecting you to your order page...
           </p>
         </div>
       </div>

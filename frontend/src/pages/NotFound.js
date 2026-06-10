@@ -43,7 +43,7 @@ function NotFound() {
           marginBottom: '40px',
           maxWidth: '400px'
         }}>
-          Yeh page exist nahi karta. Shayad aap galat jagah aa gaye!
+          This page doesnt exist!
         </p>
         <Link to="/home" style={{
           display: 'inline-block',
