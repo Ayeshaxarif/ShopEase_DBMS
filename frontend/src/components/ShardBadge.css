@@ -1,0 +1,38 @@
+.shard-badge-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding: 8px 14px;
+  background: #1a1a2e;
+  border: 1px solid #2d2d44;
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+.shard-badge {
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.shard-badge.targeted {
+  background: #0f4c2a;
+  color: #4ade80;
+  border: 1px solid #4ade80;
+}
+
+.shard-badge.scatter {
+  background: #4a1d00;
+  color: #fb923c;
+  border: 1px solid #fb923c;
+}
+
+.shard-info-text {
+  color: #9ca3af;
+}
+
+.shard-info-text strong {
+  color: #e2e8f0;
+}

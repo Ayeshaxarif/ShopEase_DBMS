@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
+import ShardBadge from '../components/ShardBadge';
 import './Products.css';
 
 const API_URL = 'http://localhost:5000/api';
@@ -13,23 +14,22 @@ function Products({ addToCart }) {
   const [search,         setSearch]         = useState('');
   const [searchInput,    setSearchInput]    = useState('');
   const [products,       setProducts]       = useState([]);
+  const [sharding,       setSharding]       = useState(null);
   const [loading,        setLoading]        = useState(true);
-
 
   const categories = ['All', 'Electronics', 'Fashion', 'Home', 'Sports'];
 
-  // FIX: fetch from backend with category AND search params
   const fetchProducts = useCallback(async () => {
     try {
       setLoading(true);
       const params = new URLSearchParams();
       if (activeCategory !== 'All') params.set('category', activeCategory);
-      // FIX: send search to backend for MongoDB $text search
       if (search.trim()) params.set('search', search.trim());
 
       const res  = await fetch(`${API_URL}/products?${params.toString()}`);
       const data = await res.json();
       setProducts(data.products || []);
+      setSharding(data.sharding || null);
     } catch (error) {
       console.error('Error fetching products:', error);
     } finally {
@@ -41,7 +41,6 @@ function Products({ addToCart }) {
     fetchProducts();
   }, [fetchProducts]);
 
-  // Debounce search: wait 400ms after user stops typing before calling backend
   useEffect(() => {
     const timer = setTimeout(() => {
       setSearch(searchInput);
@@ -73,7 +72,9 @@ function Products({ addToCart }) {
         ))}
       </div>
 
-      {/* Show result count when searching */}
+      {/* Sharding Badge */}
+      <ShardBadge sharding={sharding} />
+
       {search && !loading && (
         <p style={{ color: '#9ca3af', fontSize: '14px', marginBottom: '16px', paddingLeft: '4px' }}>
           {products.length} result{products.length !== 1 ? 's' : ''} for "<strong>{search}</strong>"
@@ -98,4 +99,3 @@ function Products({ addToCart }) {
 }
 
 export default Products;
-

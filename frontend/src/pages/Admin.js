@@ -35,7 +35,7 @@ function Admin() {
   }, [loggedIn]);
 
   const fetchProducts = async () => {
-    const res  = await fetch(`${API_URL}/products`);
+    const res  = await fetch(`${API_URL}/products?limit=50`);
     const data = await res.json();
     setProductList(data.products || []);
   };

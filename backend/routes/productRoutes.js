@@ -2,6 +2,7 @@ const express = require('express');
 const router  = express.Router();
 const Product = require('../models/Product');
 const { protect, adminOnly } = require('../middleware/authMiddleware');
+const { getProductShardsByCategories } = require('../config/sharding');
 
 // ─── GET /api/products ────────────────────────────────────────
 // Features: category filter, text search, pagination, sorting
@@ -56,9 +57,16 @@ router.get('/', async (req, res) => {
       Product.countDocuments(filter),
     ]);
 
+    const targetShards = getProductShardsByCategories(category && category !== 'All' ? category : 'All');
+
     res.json({
       success: true,
       products,
+      sharding: {
+        shardsQueried: targetShards,
+        queryType: targetShards.length === 1 ? 'targeted' : 'scatter-gather',
+        shardKey: 'category',
+      },
       pagination: {
         total,
         page:       pageNum,
